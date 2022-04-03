@@ -99,7 +99,7 @@ else
 fi
 
 if [ ! -d "${KDIR}/anykernel3-mojito/" ]; then
-	git clone --depth=1 https://github.com/cyberknight777/anykernel3 -b mojito anykernel3-mojito
+	git clone --depth=1 https://github.com/neternels/anykernel3 -b mojito anykernel3-mojito
 fi
 
 exit_on_signal_SIGINT() {
