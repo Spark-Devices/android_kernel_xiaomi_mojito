@@ -27,6 +27,9 @@ if [[ "${COMPILER}" = gcc ]]; then
 		unzip "${KDIR}"/32.zip
 		mv "${KDIR}"/gcc-arm-c8b46a6ab60d998b5efa1d5fb6aa34af35a95bad "${KDIR}"/gcc32
 	fi
+	if [ ! -f "${KDIR}/ld.lld" ];then
+		wget https://gitlab.com/zlatanr/dora-clang-1/-/raw/master/bin/lld -O ld.lld && chmod +x ld.lld
+	fi
 	KBUILD_COMPILER_STRING=$("${KDIR}"/gcc64/bin/aarch64-elf-gcc --version | head -n 1)
 	export KBUILD_COMPILER_STRING
 	export PATH="${KDIR}"/gcc32/bin:"${KDIR}"/gcc64/bin:/usr/bin/:${PATH}
@@ -35,7 +38,7 @@ if [[ "${COMPILER}" = gcc ]]; then
 		O=out
 		CROSS_COMPILE=aarch64-elf-
 		CROSS_COMPILE_ARM32=arm-eabi-
-		LD=aarch64-elf-"${LINKER}"
+		LD="${KDIR}"/ld.lld
 		AR=llvm-ar
 		OBJDUMP=llvm-objdump
 		STRIP=llvm-strip
