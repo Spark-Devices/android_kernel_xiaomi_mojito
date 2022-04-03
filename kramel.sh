@@ -12,6 +12,7 @@ export REPO_URL="https://github.com/neternels/android_kernel_xiaomi_mojito"
 COMMIT_HASH=$(git rev-parse --short HEAD)
 export COMMIT_HASH
 export SILENT=0
+export MODULE=1
 export CHATID=-1001301508914
 PROCS=$(nproc --all)
 export PROCS
@@ -68,6 +69,12 @@ elif [[ "${COMPILER}" = clang ]]; then
 	)
 fi
 
+if [[ "${MODULE}" = 1 ]];then
+	if [ ! -d "${KDIR}"/modules ];then
+		git clone --depth=1 https://github.com/neternels/neternels-modules "${KDIR}"/modules
+	fi
+fi
+
 if [ "${ci}" != 1 ];then
     if [ -z "${kver}" ]; then
 	echo -e "\e[1;31m[!] Pass kver=<version number> before running script! \e[0m"
@@ -86,6 +93,9 @@ else
     export VERSION=$version
     kver=$KBUILD_BUILD_VERSION
     zipn=NetErnels-mojito-${VERSION}
+    if [[ "${MODULE}" = "1" ]];then
+        modn="${zipn}-modules"
+    fi
 fi
 
 if [ ! -d "${KDIR}/anykernel3-mojito/" ]; then
@@ -169,7 +179,10 @@ mod() {
 	make "${MAKE[@]}" modules_prepare
 	make -j"$PROCS" "${MAKE[@]}" modules INSTALL_MOD_PATH="${KDIR}"/out/modules
 	make "${MAKE[@]}" modules_install INSTALL_MOD_PATH="${KDIR}"/out/modules
-	findo "${KDIR}"/out/modules -type f -iname '*.ko' -exec cp {} "${KDIR}"/anykernel3-mojito/modules/system/lib/modules/ \;
+	find "${KDIR}"/out/modules -type f -iname '*.ko' -exec cp {} "${KDIR}"/modules/system/lib/modules/ \;
+	cd "${KDIR}"/modules
+	zip -r9 "${modn}".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
+	cd ../
 	echo -e "\n\e[1;32m[✓] Built Modules! \e[0m" | pv -qL 30
 }
 mkzip() {
@@ -182,6 +195,10 @@ mkzip() {
 	zip -r9 "$zipn".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
 	echo -e "\n\e[1;32m[✓] Built zip! \e[0m" | pv -qL 30
 	tgs "${zipn}.zip" "*#${kver} ${KBUILD_COMPILER_STRING}*"
+	if [[ ${MODULE} = "1" ]];then
+		cd ../modules || exit 1
+		tgs "${modn}.zip" "*#${kver} ${KBUILD_COMPILER_STRING}*"
+	fi
 }
 
 obj() {
