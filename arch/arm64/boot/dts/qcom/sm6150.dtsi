@@ -3217,34 +3217,34 @@
 			reg = <0>;
 			qcom,silver-khz = <1708800>;
 			qcom,gold-khz = <2016000>;
-			qcom,trip-deg = <65000>;
+			qcom,trip-deg = <55000>;
 		};
 
 		zone@1 {
 			reg = <1>;
 			qcom,silver-khz = <1593600>;
 			qcom,gold-khz = <1708800>;
-			qcom,trip-deg = <70000>;
+			qcom,trip-deg = <60000>;
 		};
 
 		zone@2 {
 			reg = <2>;
 			qcom,silver-khz = <1593600>;
 			qcom,gold-khz = <1363200>;
-			qcom,trip-deg = <73500>;
+			qcom,trip-deg = <63500>;
 		};
 
 		zone@3 {
 			reg = <3>;
-			qcom,silver-khz = <1593600>;
-			qcom,gold-khz = <1209600>;
+			qcom,silver-khz = <1708800>;
+			qcom,gold-khz = <1900800>;
 			qcom,trip-deg = <76500>;
 		};
 
 		zone@4 {
 			reg = <4>;
-			qcom,silver-khz = <1593600>;
-			qcom,gold-khz = <1209600>;
+			qcom,silver-khz = <1708800>;
+			qcom,gold-khz = <2112000>;
 			qcom,trip-deg = <85000>;
 		};
 	};
