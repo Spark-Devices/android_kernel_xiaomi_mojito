@@ -225,7 +225,7 @@ img() {
     rgn
     echo -e "\n\e[1;93m[*] Building Kernel! \e[0m"
     BUILD_START=$(date +"%s")
-    time make -j"$PROCS" "${MAKE[@]}" Image dtbo.img dtb.img 2>&1 | tee log.txt
+    time make -j"$PROCS" "${MAKE[@]}" Image dtbo.img 2>&1 | tee log.txt
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
     if [ -f "${KDIR}/out/arch/arm64/boot/Image" ]; then
@@ -246,7 +246,7 @@ img() {
 dtb() {
     rgn
     echo -e "\n\e[1;93m[*] Building DTBS! \e[0m"
-    time make -j"$PROCS" "${MAKE[@]}" dtbs dtbo.img dtb.img
+    time make -j"$PROCS" "${MAKE[@]}" dtbs dtbo.img
     echo -e "\n\e[1;32m[✓] Built DTBS! \e[0m"
 }
 
@@ -275,7 +275,7 @@ mkzip() {
     fi
     echo -e "\n\e[1;93m[*] Building zip! \e[0m"
     mv "${KDIR}"/out/arch/arm64/boot/dtbo.img "${KDIR}"/anykernel3-mojito
-    mv "${KDIR}"/out/arch/arm64/boot/dtb.img "${KDIR}"/anykernel3-mojito
+    cat "${KDIR}"/out/arch/arm64/boot/dts/qcom/sm6150.dtb > "${KDIR}"/anykernel3-mojito/dtb
     mv "${KDIR}"/out/arch/arm64/boot/Image "${KDIR}"/anykernel3-mojito
     cd "${KDIR}"/anykernel3-mojito || exit 1
     zip -r9 "$zipn".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
