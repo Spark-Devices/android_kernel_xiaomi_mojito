@@ -123,6 +123,16 @@ static void libcam_helper(void)
 	}
 }
 
+static void freq_helper(void)
+{
+	pr_info("Setting min/max freqs of little cluster...");
+	nix_sh("/system/bin/echo 1363200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
+	nix_sh("/system/bin/echo 1708800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
+	pr_info("Setting min/max freqs of big cluster...");
+	nix_sh("/system/bin/echo 979200 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq");
+	nix_sh("/system/bin/echo 2016000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq");
+}
+
 static void userland_worker(struct work_struct *work)
 {
 	bool is_enforcing;
@@ -148,6 +158,7 @@ static void userland_worker(struct work_struct *work)
 
 	vbswap_helper();
 	libcam_helper();
+	freq_helper();
 
 	if (is_enforcing) {
 		pr_info("Setting selinux state: enforcing");
